@@ -2,3 +2,64 @@
 Decomp from CBeeBies game.
 
 Due 99.9% of the decompiled code being bad/incomplete/etc, my main goal is to fix it so i can build a working .swf from it.
+
+For comparision, heres a code snippet:
+
+``` actionscript
+public static function getLightMatrix(param1:LightObject3D, param2:DisplayObject3D, param3:RenderSessionData, param4:Matrix3D) : Matrix3D
+      {
+         var _loc6_:Matrix3D = null;
+         var _loc7_:Matrix3D = null;
+         var _loc5_:Matrix3D = param4 ? param4 : Matrix3D.IDENTITY;
+         if(param1 == null)
+         {
+            param1 = new PointLight3D();
+            param1.copyPosition(param3.camera);
+         }
+         _targetPos.reset();
+         _lightPos.reset();
+         _lightDir.reset();
+         _lightUp.reset();
+         _lightSide.reset();
+         _loc6_ = param1.transform;
+         _loc7_ = param2.world;
+         _lightPos.x = -_loc6_.n14;
+         _lightPos.y = -_loc6_.n24;
+         _lightPos.z = -_loc6_.n34;
+         _targetPos.x = -_loc7_.n14;
+         _targetPos.y = -_loc7_.n24;
+         _targetPos.z = -_loc7_.n34;
+         _lightDir.x = _targetPos.x - _lightPos.x;
+         _lightDir.y = _targetPos.y - _lightPos.y;
+         _lightDir.z = _targetPos.z - _lightPos.z;
+         invMatrix.calculateInverse(param2.world);
+         Matrix3D.multiplyVector3x3(invMatrix,_lightDir);
+         _lightDir.normalize();
+         _lightSide.x = _lightDir.y * UP.z - _lightDir.z * UP.y;
+         _lightSide.y = _lightDir.z * UP.x - _lightDir.x * UP.z;
+         _lightSide.z = _lightDir.x * UP.y - _lightDir.y * UP.x;
+         _lightSide.normalize();
+         _lightUp.x = _lightSide.y * _lightDir.z - _lightSide.z * _lightDir.y;
+         _lightUp.y = _lightSide.z * _lightDir.x - _lightSide.x * _lightDir.z;
+         _lightUp.z = _lightSide.x * _lightDir.y - _lightSide.y * _lightDir.x;
+         _lightUp.normalize();
+         if(Papervision3D.useRIGHTHANDED || param2.flipLightDirection)
+         {
+            _lightDir.x = -_lightDir.x;
+            _lightDir.y = -_lightDir.y;
+            _lightDir.z = -_lightDir.z;
+         }
+         _loc5_.n11 = _lightSide.x;
+         _loc5_.n12 = _lightSide.y;
+         _loc5_.n13 = _lightSide.z;
+         _loc5_.n21 = _lightUp.x;
+         _loc5_.n22 = _lightUp.y;
+         _loc5_.n23 = _lightUp.z;
+         _loc5_.n31 = _lightDir.x;
+         _loc5_.n32 = _lightDir.y;
+         _loc5_.n33 = _lightDir.z;
+         return _loc5_;
+      }
+```
+
+So yes, a LOT of things need to be worked on.
